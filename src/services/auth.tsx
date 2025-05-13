@@ -1,8 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import axios from "axios";
 import { api } from "../variables/axiosInstances/backendAxiosInstances";
-import type { LoginResponse, LogoutResponse } from "../types/auth";
+import type {
+  AuthUserResponse,
+  LoginResponse,
+  LogoutResponse,
+} from "../types/auth";
 import { queryClient } from "../variables/axiosInstances/queryClient";
 
 export function useLogin() {
@@ -36,7 +39,19 @@ export function useLogout() {
     },
     onSuccess: () => {
       queryClient.clear();
-      history.replaceState(null, "", "/login");
+      history.replaceState(null, "", "/sign-in");
     },
+  });
+}
+
+export function useSessionAuthenticate() {
+  return useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      console.log("yeah boii");
+      const { data } = await api.get("/me");
+      return data as AuthUserResponse;
+    },
+    retryOnMount: false,
   });
 }

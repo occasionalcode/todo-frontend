@@ -11,11 +11,25 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/_login/route'
+import { Route as AuthRouteImport } from './routes/_auth/route'
 import { Route as IndexImport } from './routes/index'
-import { Route as AuthLoginIndexImport } from './routes/_auth/login/index'
+import { Route as LoginSignInIndexImport } from './routes/_login/sign-in/index'
 import { Route as AuthDashboardIndexImport } from './routes/_auth/dashboard/index'
+import { Route as AuthTodotabTodotabIdIndexImport } from './routes/_auth/todotab/$todotabId/index'
+import { Route as AuthTodotabTodotabIdTabTabIdIndexImport } from './routes/_auth/todotab/$todotabId/tab/$tabId/index'
 
 // Create/Update Routes
+
+const LoginRouteRoute = LoginRouteImport.update({
+  id: '/_login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthRouteRoute = AuthRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -23,17 +37,30 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthLoginIndexRoute = AuthLoginIndexImport.update({
-  id: '/_auth/login/',
-  path: '/login/',
-  getParentRoute: () => rootRoute,
+const LoginSignInIndexRoute = LoginSignInIndexImport.update({
+  id: '/sign-in/',
+  path: '/sign-in/',
+  getParentRoute: () => LoginRouteRoute,
 } as any)
 
 const AuthDashboardIndexRoute = AuthDashboardIndexImport.update({
-  id: '/_auth/dashboard/',
+  id: '/dashboard/',
   path: '/dashboard/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
+
+const AuthTodotabTodotabIdIndexRoute = AuthTodotabTodotabIdIndexImport.update({
+  id: '/todotab/$todotabId/',
+  path: '/todotab/$todotabId/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
+const AuthTodotabTodotabIdTabTabIdIndexRoute =
+  AuthTodotabTodotabIdTabTabIdIndexImport.update({
+    id: '/todotab/$todotabId/tab/$tabId/',
+    path: '/todotab/$todotabId/tab/$tabId/',
+    getParentRoute: () => AuthRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -46,63 +73,150 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/_login': {
+      id: '/_login'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/_auth/dashboard/': {
       id: '/_auth/dashboard/'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthDashboardIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthRouteImport
     }
-    '/_auth/login/': {
-      id: '/_auth/login/'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginIndexImport
-      parentRoute: typeof rootRoute
+    '/_login/sign-in/': {
+      id: '/_login/sign-in/'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof LoginSignInIndexImport
+      parentRoute: typeof LoginRouteImport
+    }
+    '/_auth/todotab/$todotabId/': {
+      id: '/_auth/todotab/$todotabId/'
+      path: '/todotab/$todotabId'
+      fullPath: '/todotab/$todotabId'
+      preLoaderRoute: typeof AuthTodotabTodotabIdIndexImport
+      parentRoute: typeof AuthRouteImport
+    }
+    '/_auth/todotab/$todotabId/tab/$tabId/': {
+      id: '/_auth/todotab/$todotabId/tab/$tabId/'
+      path: '/todotab/$todotabId/tab/$tabId'
+      fullPath: '/todotab/$todotabId/tab/$tabId'
+      preLoaderRoute: typeof AuthTodotabTodotabIdTabTabIdIndexImport
+      parentRoute: typeof AuthRouteImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AuthRouteRouteChildren {
+  AuthDashboardIndexRoute: typeof AuthDashboardIndexRoute
+  AuthTodotabTodotabIdIndexRoute: typeof AuthTodotabTodotabIdIndexRoute
+  AuthTodotabTodotabIdTabTabIdIndexRoute: typeof AuthTodotabTodotabIdTabTabIdIndexRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthDashboardIndexRoute: AuthDashboardIndexRoute,
+  AuthTodotabTodotabIdIndexRoute: AuthTodotabTodotabIdIndexRoute,
+  AuthTodotabTodotabIdTabTabIdIndexRoute:
+    AuthTodotabTodotabIdTabTabIdIndexRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
+interface LoginRouteRouteChildren {
+  LoginSignInIndexRoute: typeof LoginSignInIndexRoute
+}
+
+const LoginRouteRouteChildren: LoginRouteRouteChildren = {
+  LoginSignInIndexRoute: LoginSignInIndexRoute,
+}
+
+const LoginRouteRouteWithChildren = LoginRouteRoute._addFileChildren(
+  LoginRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '': typeof LoginRouteRouteWithChildren
   '/dashboard': typeof AuthDashboardIndexRoute
-  '/login': typeof AuthLoginIndexRoute
+  '/sign-in': typeof LoginSignInIndexRoute
+  '/todotab/$todotabId': typeof AuthTodotabTodotabIdIndexRoute
+  '/todotab/$todotabId/tab/$tabId': typeof AuthTodotabTodotabIdTabTabIdIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '': typeof LoginRouteRouteWithChildren
   '/dashboard': typeof AuthDashboardIndexRoute
-  '/login': typeof AuthLoginIndexRoute
+  '/sign-in': typeof LoginSignInIndexRoute
+  '/todotab/$todotabId': typeof AuthTodotabTodotabIdIndexRoute
+  '/todotab/$todotabId/tab/$tabId': typeof AuthTodotabTodotabIdTabTabIdIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/_auth': typeof AuthRouteRouteWithChildren
+  '/_login': typeof LoginRouteRouteWithChildren
   '/_auth/dashboard/': typeof AuthDashboardIndexRoute
-  '/_auth/login/': typeof AuthLoginIndexRoute
+  '/_login/sign-in/': typeof LoginSignInIndexRoute
+  '/_auth/todotab/$todotabId/': typeof AuthTodotabTodotabIdIndexRoute
+  '/_auth/todotab/$todotabId/tab/$tabId/': typeof AuthTodotabTodotabIdTabTabIdIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/login'
+  fullPaths:
+    | '/'
+    | ''
+    | '/dashboard'
+    | '/sign-in'
+    | '/todotab/$todotabId'
+    | '/todotab/$todotabId/tab/$tabId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/login'
-  id: '__root__' | '/' | '/_auth/dashboard/' | '/_auth/login/'
+  to:
+    | '/'
+    | ''
+    | '/dashboard'
+    | '/sign-in'
+    | '/todotab/$todotabId'
+    | '/todotab/$todotabId/tab/$tabId'
+  id:
+    | '__root__'
+    | '/'
+    | '/_auth'
+    | '/_login'
+    | '/_auth/dashboard/'
+    | '/_login/sign-in/'
+    | '/_auth/todotab/$todotabId/'
+    | '/_auth/todotab/$todotabId/tab/$tabId/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthDashboardIndexRoute: typeof AuthDashboardIndexRoute
-  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  LoginRouteRoute: typeof LoginRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthDashboardIndexRoute: AuthDashboardIndexRoute,
-  AuthLoginIndexRoute: AuthLoginIndexRoute,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
+  LoginRouteRoute: LoginRouteRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -116,18 +230,42 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/_auth/dashboard/",
-        "/_auth/login/"
+        "/_auth",
+        "/_login"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/_auth/dashboard/": {
-      "filePath": "_auth/dashboard/index.tsx"
+    "/_auth": {
+      "filePath": "_auth/route.tsx",
+      "children": [
+        "/_auth/dashboard/",
+        "/_auth/todotab/$todotabId/",
+        "/_auth/todotab/$todotabId/tab/$tabId/"
+      ]
     },
-    "/_auth/login/": {
-      "filePath": "_auth/login/index.tsx"
+    "/_login": {
+      "filePath": "_login/route.tsx",
+      "children": [
+        "/_login/sign-in/"
+      ]
+    },
+    "/_auth/dashboard/": {
+      "filePath": "_auth/dashboard/index.tsx",
+      "parent": "/_auth"
+    },
+    "/_login/sign-in/": {
+      "filePath": "_login/sign-in/index.tsx",
+      "parent": "/_login"
+    },
+    "/_auth/todotab/$todotabId/": {
+      "filePath": "_auth/todotab/$todotabId/index.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/todotab/$todotabId/tab/$tabId/": {
+      "filePath": "_auth/todotab/$todotabId/tab/$tabId/index.tsx",
+      "parent": "/_auth"
     }
   }
 }
