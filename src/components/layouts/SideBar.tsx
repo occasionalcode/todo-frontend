@@ -1,5 +1,10 @@
-import { ClipboardCheck, House, LayoutDashboard, ListTodo } from "lucide-react";
-import { useFetchAllTodotab } from "../../services/todotab";
+import {
+  ClipboardCheck,
+  LayoutDashboard,
+  ListTodo,
+  PlusIcon,
+} from "lucide-react";
+import { useFetchAllTodotab, useTodoTabCreate } from "../../services/todotab";
 import {
   Sidebar,
   SidebarContent,
@@ -12,11 +17,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import type { ReactNode } from "react";
-import { Link, type LinkProps } from "@tanstack/react-router";
+import { type ReactNode } from "react";
+import { Link, useNavigate, type LinkProps } from "@tanstack/react-router";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSessionAuthenticate } from "../../services/auth";
+import { Button } from "../ui/button";
+
+import { toast } from "sonner";
 
 type MainRoutesType = {
   title: string;
@@ -25,10 +33,34 @@ type MainRoutesType = {
 };
 
 export function SideBar() {
-  const { data: userInfo, isLoading: userInfoLoading } =
-    useSessionAuthenticate();
+  const { data: userInfo } = useSessionAuthenticate();
   const { data, isLoading, error } = useFetchAllTodotab();
-  // const { firstName, lastName, email } = useUserInfo();
+  const { mutateAsync: createTodotab } = useTodoTabCreate();
+  const navigate = useNavigate();
+
+  async function handleSubmit() {
+    try {
+      const newTab = await createTodotab({
+        title: undefined,
+        description: undefined,
+      });
+      const newTabId = newTab?.data?.id; // Adjust based on actual response structure
+
+      if (newTabId) {
+        navigate({
+          to: "/todotab/$todotabId",
+          params: { todotabId: newTabId },
+          search: { isNew: true },
+        });
+      } else {
+        toast.error("Failed to get the new Todo Tab ID.");
+      }
+    } catch (error) {
+      console.error("Error creating Todo Tab:", error);
+      toast.error("Something went wrong while creating a Todo Tab.");
+    }
+  }
+
   const mainRoutes: MainRoutesType[] = [
     {
       title: "Dashboard",
@@ -41,6 +73,7 @@ export function SideBar() {
       link: { to: "/dashboard" },
     },
   ];
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -77,7 +110,9 @@ export function SideBar() {
                       <SidebarMenuButton asChild>
                         <Link className="text-[#2B3674] " {...route.link}>
                           {route.icon}
-                          <p className="font-semibold">{route.title}</p>
+                          <p className="font-semibold">
+                            {route.title ?? "New Tab"}
+                          </p>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -87,8 +122,14 @@ export function SideBar() {
             </SidebarGroupContent>
           </SidebarGroup>
           <SidebarGroup>
-            <SidebarGroupLabel className="text-black">
-              Categories
+            <SidebarGroupLabel className="text-black justify-between flex">
+              <p>Categories</p>
+              <Button
+                onClick={() => handleSubmit()}
+                className="flex justify-center items-center size-5   bg-gray-100 hover:bg-gray-200"
+              >
+                <PlusIcon className="p-0.5 text-[#2B3674]" strokeWidth={3} />
+              </Button>
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
@@ -98,10 +139,13 @@ export function SideBar() {
                       <Link
                         className="text-[#2B3674]"
                         to={"/todotab/$todotabId"}
+                        search={{ isNew: false }}
                         params={{ todotabId: tab.id }}
                       >
                         <ListTodo strokeWidth={3} />
-                        <span className="font-semibold">{tab.title}</span>
+                        <span className="font-semibold">
+                          {tab.title ?? "New Tab"}
+                        </span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

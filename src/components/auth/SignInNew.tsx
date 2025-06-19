@@ -15,6 +15,7 @@ import { z } from "zod";
 import { useLogin } from "../../services/auth";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -27,7 +28,7 @@ export function SignInNew() {
 
   const { mutateAsync: login } = useLogin();
   const navigate = useNavigate();
-
+  const [formError, setFormError] = useState<string>();
   async function handleSubmit(data: z.infer<typeof formSchema>) {
     try {
       await login(data);
@@ -35,6 +36,7 @@ export function SignInNew() {
       navigate({ to: "/dashboard" });
     } catch (error) {
       console.log(error);
+      setFormError("Invalid email or password");
     }
   }
 
@@ -63,7 +65,7 @@ export function SignInNew() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel className="text-start">Email</FormLabel>
                         <FormControl>
                           <Input
                             className="text-gray-800 h-10"
@@ -71,7 +73,9 @@ export function SignInNew() {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage className="text-red-500 text-start" />
+                        <FormMessage className="text-red-500 text-start">
+                          {formError}
+                        </FormMessage>
                       </FormItem>
                     )}
                   />
@@ -80,7 +84,7 @@ export function SignInNew() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="">Password</FormLabel>
+                        <FormLabel className="text-start">Password</FormLabel>
                         <FormControl>
                           <Input
                             className="text-gray-800 h-10"
@@ -89,7 +93,9 @@ export function SignInNew() {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage className="text-red-500 text-start" />
+                        <FormMessage className="text-red-500 text-start">
+                          {formError}
+                        </FormMessage>
                       </FormItem>
                     )}
                   />

@@ -6,8 +6,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../../components/ui/sidebar";
-import { useUserInfo } from "../../stores/userInfoStore";
-import { useState } from "react";
+import { Toaster } from "sonner";
 
 export const Route = createFileRoute("/_auth")({
   component: AuthLayout,
@@ -37,6 +36,7 @@ export function AuthLayout() {
               <SidebarTrigger />
               <Outlet />
             </main>
+            <Toaster />
           </SidebarInset>
         </SidebarProvider>
       </div>

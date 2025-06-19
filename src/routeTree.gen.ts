@@ -17,7 +17,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as LoginSignInIndexImport } from './routes/_login/sign-in/index'
 import { Route as AuthDashboardIndexImport } from './routes/_auth/dashboard/index'
 import { Route as AuthTodotabTodotabIdIndexImport } from './routes/_auth/todotab/$todotabId/index'
-import { Route as AuthTodotabTodotabIdTabTabIdIndexImport } from './routes/_auth/todotab/$todotabId/tab/$tabId/index'
+import { Route as AuthTodotabTodotabIdTodoTodoIdTasksIndexImport } from './routes/_auth/todotab/$todotabId/todo/$todoId/tasks/index'
 
 // Create/Update Routes
 
@@ -55,10 +55,10 @@ const AuthTodotabTodotabIdIndexRoute = AuthTodotabTodotabIdIndexImport.update({
   getParentRoute: () => AuthRouteRoute,
 } as any)
 
-const AuthTodotabTodotabIdTabTabIdIndexRoute =
-  AuthTodotabTodotabIdTabTabIdIndexImport.update({
-    id: '/todotab/$todotabId/tab/$tabId/',
-    path: '/todotab/$todotabId/tab/$tabId/',
+const AuthTodotabTodotabIdTodoTodoIdTasksIndexRoute =
+  AuthTodotabTodotabIdTodoTodoIdTasksIndexImport.update({
+    id: '/todotab/$todotabId/todo/$todoId/tasks/',
+    path: '/todotab/$todotabId/todo/$todoId/tasks/',
     getParentRoute: () => AuthRouteRoute,
   } as any)
 
@@ -108,11 +108,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthTodotabTodotabIdIndexImport
       parentRoute: typeof AuthRouteImport
     }
-    '/_auth/todotab/$todotabId/tab/$tabId/': {
-      id: '/_auth/todotab/$todotabId/tab/$tabId/'
-      path: '/todotab/$todotabId/tab/$tabId'
-      fullPath: '/todotab/$todotabId/tab/$tabId'
-      preLoaderRoute: typeof AuthTodotabTodotabIdTabTabIdIndexImport
+    '/_auth/todotab/$todotabId/todo/$todoId/tasks/': {
+      id: '/_auth/todotab/$todotabId/todo/$todoId/tasks/'
+      path: '/todotab/$todotabId/todo/$todoId/tasks'
+      fullPath: '/todotab/$todotabId/todo/$todoId/tasks'
+      preLoaderRoute: typeof AuthTodotabTodotabIdTodoTodoIdTasksIndexImport
       parentRoute: typeof AuthRouteImport
     }
   }
@@ -123,14 +123,14 @@ declare module '@tanstack/react-router' {
 interface AuthRouteRouteChildren {
   AuthDashboardIndexRoute: typeof AuthDashboardIndexRoute
   AuthTodotabTodotabIdIndexRoute: typeof AuthTodotabTodotabIdIndexRoute
-  AuthTodotabTodotabIdTabTabIdIndexRoute: typeof AuthTodotabTodotabIdTabTabIdIndexRoute
+  AuthTodotabTodotabIdTodoTodoIdTasksIndexRoute: typeof AuthTodotabTodotabIdTodoTodoIdTasksIndexRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthDashboardIndexRoute: AuthDashboardIndexRoute,
   AuthTodotabTodotabIdIndexRoute: AuthTodotabTodotabIdIndexRoute,
-  AuthTodotabTodotabIdTabTabIdIndexRoute:
-    AuthTodotabTodotabIdTabTabIdIndexRoute,
+  AuthTodotabTodotabIdTodoTodoIdTasksIndexRoute:
+    AuthTodotabTodotabIdTodoTodoIdTasksIndexRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
@@ -155,7 +155,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthDashboardIndexRoute
   '/sign-in': typeof LoginSignInIndexRoute
   '/todotab/$todotabId': typeof AuthTodotabTodotabIdIndexRoute
-  '/todotab/$todotabId/tab/$tabId': typeof AuthTodotabTodotabIdTabTabIdIndexRoute
+  '/todotab/$todotabId/todo/$todoId/tasks': typeof AuthTodotabTodotabIdTodoTodoIdTasksIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -164,7 +164,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthDashboardIndexRoute
   '/sign-in': typeof LoginSignInIndexRoute
   '/todotab/$todotabId': typeof AuthTodotabTodotabIdIndexRoute
-  '/todotab/$todotabId/tab/$tabId': typeof AuthTodotabTodotabIdTabTabIdIndexRoute
+  '/todotab/$todotabId/todo/$todoId/tasks': typeof AuthTodotabTodotabIdTodoTodoIdTasksIndexRoute
 }
 
 export interface FileRoutesById {
@@ -175,7 +175,7 @@ export interface FileRoutesById {
   '/_auth/dashboard/': typeof AuthDashboardIndexRoute
   '/_login/sign-in/': typeof LoginSignInIndexRoute
   '/_auth/todotab/$todotabId/': typeof AuthTodotabTodotabIdIndexRoute
-  '/_auth/todotab/$todotabId/tab/$tabId/': typeof AuthTodotabTodotabIdTabTabIdIndexRoute
+  '/_auth/todotab/$todotabId/todo/$todoId/tasks/': typeof AuthTodotabTodotabIdTodoTodoIdTasksIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -186,7 +186,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/sign-in'
     | '/todotab/$todotabId'
-    | '/todotab/$todotabId/tab/$tabId'
+    | '/todotab/$todotabId/todo/$todoId/tasks'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -194,7 +194,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/sign-in'
     | '/todotab/$todotabId'
-    | '/todotab/$todotabId/tab/$tabId'
+    | '/todotab/$todotabId/todo/$todoId/tasks'
   id:
     | '__root__'
     | '/'
@@ -203,7 +203,7 @@ export interface FileRouteTypes {
     | '/_auth/dashboard/'
     | '/_login/sign-in/'
     | '/_auth/todotab/$todotabId/'
-    | '/_auth/todotab/$todotabId/tab/$tabId/'
+    | '/_auth/todotab/$todotabId/todo/$todoId/tasks/'
   fileRoutesById: FileRoutesById
 }
 
@@ -242,7 +242,7 @@ export const routeTree = rootRoute
       "children": [
         "/_auth/dashboard/",
         "/_auth/todotab/$todotabId/",
-        "/_auth/todotab/$todotabId/tab/$tabId/"
+        "/_auth/todotab/$todotabId/todo/$todoId/tasks/"
       ]
     },
     "/_login": {
@@ -263,8 +263,8 @@ export const routeTree = rootRoute
       "filePath": "_auth/todotab/$todotabId/index.tsx",
       "parent": "/_auth"
     },
-    "/_auth/todotab/$todotabId/tab/$tabId/": {
-      "filePath": "_auth/todotab/$todotabId/tab/$tabId/index.tsx",
+    "/_auth/todotab/$todotabId/todo/$todoId/tasks/": {
+      "filePath": "_auth/todotab/$todotabId/todo/$todoId/tasks/index.tsx",
       "parent": "/_auth"
     }
   }

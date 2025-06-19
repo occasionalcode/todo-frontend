@@ -1,6 +1,5 @@
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import { useSessionAuthenticate } from "../../services/auth";
-import { useUserInfo } from "../../stores/userInfoStore";
 
 export const Route = createFileRoute("/_login")({
   component: RouteComponent,

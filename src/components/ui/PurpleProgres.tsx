@@ -18,7 +18,7 @@ function PurpleProgress({
     >
       <ProgressPrimitive.Indicator
         data-slot="progress-indicator"
-        className="bg-[#8651FE] h-full w-full flex-1 transition-all"
+        className="bg-[#aa51fe] h-full w-full flex-1 transition-all"
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       />
     </ProgressPrimitive.Root>

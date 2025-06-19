@@ -1,28 +1,31 @@
-export interface TodoResponse {
+import type { Status } from "./task";
+
+export interface AllTodoResponse {
   message: string;
-  data: Datum[];
+  data: AllTodoData[];
 }
 
-export interface Datum {
+export interface AllTodoData {
   id: string;
   title: string;
   createdAt: Date;
   updatedAt: Date;
-  status: string;
-}
-// ----------
-export interface TodoByTabIdResponse {
-  message: string;
-  data: TodoByTabIdData[];
+  status: Status;
 }
 
-export interface TodoByTabIdData {
+// ----------
+export interface TodoByTodoTabIdResponse {
+  message: string;
+  data: TodoByTodoTabIdData[];
+}
+
+export interface TodoByTodoTabIdData {
   id: string;
   title: string;
   description: null | string;
   createdAt: Date;
   updatedAt: Date;
-  status: string;
+  status: Status;
   ongoingCount: number;
   finishedCount: number;
   taskCount: number;
@@ -39,7 +42,7 @@ export interface TodoByIdData {
   id: string;
   title: string;
   description: null;
-  status: string;
+  status: Status;
   todoTabId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -53,4 +56,20 @@ export interface TodoTab {
   userId: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface TodoPostResponse {
+  message: string;
+  data: TodoPostData;
+}
+
+export interface TodoPostData {
+  id: string;
+  title: string;
+  description: string;
+  status: Status;
+  todoTabId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  TodoTab: TodoTab;
 }

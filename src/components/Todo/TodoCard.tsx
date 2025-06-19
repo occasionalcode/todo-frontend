@@ -1,18 +1,20 @@
 import { EllipsisVertical } from "lucide-react";
-import type { todo } from "node:test";
 import { Button } from "../ui/button";
 import { PurpleProgress } from "../ui/PurpleProgres";
-import type { TodoByTabIdData } from "../../types/todo";
+import type { TodoByTodoTabIdData } from "../../types/todo";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Badge } from "../ui/badge";
+import { getBadgeVariant } from "../../functions/getBadgeVariant";
 
 type Props = {
-  todo: TodoByTabIdData;
+  todo: TodoByTodoTabIdData;
   progressPercent: number;
 };
 export function TodoCard({ todo, progressPercent }: Props) {
-  const { todotabId } = useParams({ from: "/_auth/todotab/$todotabId/" });
+  const { todotabId } = useParams({
+    from: "/_auth/todotab/$todotabId/",
+  });
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
 
@@ -22,19 +24,26 @@ export function TodoCard({ todo, progressPercent }: Props) {
   }, []);
 
   return (
-    <div className="size-80 rounded-2xl border bg-white text-[#9333EA] px-4 py-5  flex flex-col justify-between">
+    <div className=" w-full h-80 rounded-2xl border bg-white text-[#9333EA] px-4 py-5  flex flex-col justify-between">
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-start">
           <div className="flex flex-col">
-            <div className="flex justify-center items-center gap-2">
+            <div className="flex justify-start items-center gap-2 flex-wrap">
               <h3 className="text-2xl font-semibold text-gray-900">
                 {todo.title}
               </h3>
-              <Badge className="bg-[#7551FF] text-xs h-fit">
+              <Badge
+                variant={getBadgeVariant(todo.status)}
+                className=" text-xs h-fit"
+              >
                 {todo.status}
               </Badge>
             </div>
-            <p className="text-sm">{todo.description ?? "No description"}</p>
+            <div className="w-40">
+              <p className="text-sm text-start overflow-hidden overflow-ellipsis whitespace-nowrap">
+                {todo.description ?? "No description"}
+              </p>
+            </div>
           </div>
           <EllipsisVertical size={20} strokeWidth={2.25} />
         </div>
@@ -43,7 +52,7 @@ export function TodoCard({ todo, progressPercent }: Props) {
             <p className="font-semibold text-xl ">{todo.ongoingCount}</p>
             <h4 className="text-sm">Ongoing</h4>
           </div>
-          <div className="flex flex-col items-center justify-center p-1 text-white border  rounded-md bg-[#8651FE] w-full ">
+          <div className="flex flex-col items-center justify-center p-1 text-white border  rounded-md bg-[#aa51fe] w-full ">
             <p className="font-semibold text-xl">{todo.finishedCount}</p>
             <h4 className="text-sm">Finished</h4>
           </div>
@@ -57,8 +66,14 @@ export function TodoCard({ todo, progressPercent }: Props) {
           </div>
         </div>
       </div>
+
       <Button
-        onClick={() => navigate({ to: `/todotab/${todotabId}/tab/${todo.id}` })}
+        onClick={() =>
+          navigate({
+            to: `/todotab/$todotabId/todo/$todoId/tasks`,
+            params: { todotabId: todotabId, todoId: todo.id },
+          })
+        }
         className="bg-[#9333EA] hover:bg-[#8851ff]"
       >
         Go
